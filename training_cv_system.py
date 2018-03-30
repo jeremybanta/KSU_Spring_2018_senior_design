@@ -20,6 +20,7 @@ from keras.layers.pooling import MaxPooling2D
 import cv2
 import pickle
 from sklearn.preprocessing import StandardScaler
+import gc
 
 
 
@@ -55,14 +56,14 @@ def getError(pred, degree):
 def base_model():
 
     model = Sequential();
-    model.add(Conv2D(64, kernel_size=(3, 3),
+    model.add(Conv2D(64, kernel_size=(5, 5),
                  activation='relu',
-                 input_shape=(64,64,3)));
-    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu',input_shape=(64,64,3)));
+                 input_shape=(256,256,3)));
+    model.add(Conv2D(64, kernel_size=(5, 5), activation='relu',input_shape=(256,256,3)));
     model.add(MaxPooling2D(pool_size=(2, 2)));
-    model.add(Conv2D(64,kernel_size=(3,3),activation='relu',input_shape=(64,64,3)));
+    model.add(Conv2D(64,kernel_size=(5,5),activation='relu',input_shape=(256,256,3)));
     model.add(MaxPooling2D(pool_size=(2,2)));
-    model.add(Conv2D(64,kernel_size=(3,3),activation='relu',input_shape=(64,64,3)))
+    model.add(Conv2D(64,kernel_size=(5,5),activation='relu',input_shape=(256,256,3)))
     model.add(Flatten());
     model.add(Dense(32,activation='relu'));
     #model.add(Dropout(0.1))
@@ -82,10 +83,13 @@ im=normalize(im);
 im=im[0]
 labels_list=data[2];
 model=base_model();
-hist=model.fit(im,labels_list,epochs=1)
+gc.collect();
+hist=model.fit(im,labels_list,epochs=1);
+gc.collect();
 
 while hist.history['mean_absolute_error'][0] > 0.01: # Go again if MAE too high
-    hist = model.fit(im,labels_list,epochs=5)               # Train another epoch
+    hist = model.fit(im,labels_list,epochs=5);               # Train another epoch
+    gc.collect();
     
 
         
