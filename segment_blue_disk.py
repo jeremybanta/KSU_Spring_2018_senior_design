@@ -7,60 +7,103 @@ Created on Tue Mar 20 20:37:10 2018
 
 #Hough Transform method (circle detection);
 
-
 import numpy as np
 import cv2
+import time
 import os
 
-
-
-def segment_blue_disk(Image):
-
+def segment_blue_disk(Image,boolean=False,return_bbox=False):
+    
+    if(boolean):
+        
+        
+        IM2=Image.copy();
+        start_time=time.time();
+        
     IM=cv2.cvtColor(Image,cv2.COLOR_BGR2GRAY);
+    IM=cv2.GaussianBlur(IM,(3,3),5)
+    IM=cv2.medianBlur(IM,3)
+    IM=cv2.Canny(IM,15,90,L2gradient=True)
     
-    
-    Image=cv2.medianBlur(Image,5)
-    
+        
+
     circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1,minDist=52,
-                            param1=31,param2=70,minRadius=50,maxRadius=325)
+                            param1=120,param2=120)
     
-    
-
-    circles = np.uint16(np.around(circles))
-    circles=circles[0]
-    index=0
-    
-    for i in circles:
+    if circles is not None:
         
-        if(i[2]==np.max(circles[:,2])):
-            # draw the outer circle
-            cv2.circle(IM,(i[0],i[1]),i[2],(255,255,0),2);
-            # draw the center of the circle
-            cv2.circle(IM,(i[0],i[1]),2,(0,0,255),3);
+        
+        circles = np.uint16(np.around(circles));
+        circles=circles[0];
+    
+        for i in circles:
+        
+            if(i[2]==np.max(circles[:,2])):
+                
+                i=np.int32(i)
             
-            xmin=i[0]-i[2];
-            xmax=i[0]+i[2];
-            ymin=i[1]-i[2];
-            ymax=i[1]+i[2];
+                if(boolean):
+                    # draw the outer circle
+                    #if desired so
+                    cv2.circle(IM2,(i[0],i[1]),i[2],(255,255,0),2);
+                    # draw the center of the circle
+                    cv2.circle(IM2,(i[0],i[1]),2,(0,0,255),3);
+                xmax=i[0]+i[2];
+                ymax=i[1]+i[2];
+                
+                if(i[1]-i[2]<0):
+                    
+                    ymin=0;
+                    
+                else:
+                    
+                    ymin=i[1]-i[2];
+                    
+                if(i[0]-i[2]<0):
+                    
+                    xmin=0;
+                    
+                else:
+                    
+                    xmin=i[0]-i[2];
             
-            bbox=np.array([[ymin,ymax,xmin,xmax]]);
+                bbox=np.array([[ymin,ymax,xmin,xmax]],dtype=np.int32);
+            
+                if(boolean):
+                
+                    cv2.imshow('detected circles',IM2);
+                    cv2.imshow('processed image',IM);
+                    end_time=time.time();
+                    print(str(float(end_time-start_time))+" seconds to run ")
+                    cv2.waitKey(0);
+                    cv2.destroyAllWindows();
+                    
+                if(return_bbox):
+                    
+                    
+                    return bbox;
+                
+                else:
+                    
+                    
+                    return IM2[ymin:ymax,xmin:xmax,:];
         
-            cv2.imshow('detected circles',IM);
-            cv2.waitKey(0);
-            cv2.destroyAllWindows();
+    else:
         
-            return bbox;
+        if(return_bbox):
         
-        index=index+1;
+            return [0,IM.shape[0],0,IM.shape[1]];
+        
+        else:
+            
+            return IM2;
+    
+def main_test(number=0):
+    
+    os.chdir("C:/Users/Jeremy/");
+    pathname="C:\\Users\\Jeremy\\disk"+str(number)+"\\_0.png";
+    Image=cv2.imread(pathname);
+    segment_blue_disk(Image,boolean=True)
 
-    
-    return circles;
-    
-def main():
-    
-    
-    os.chdir("C:\\Users\\Jeremy");
-    filename="C:\\Users\\Jeremy\\disk0\\_0.png";
-    
-    return(segment_blue_disk(cv2.imread(filename)))
+
     
