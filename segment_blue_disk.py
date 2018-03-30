@@ -17,18 +17,18 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
     if(boolean):
         
         
-        IM2=Image.copy();
+        
         start_time=time.time();
         
     IM=cv2.cvtColor(Image,cv2.COLOR_BGR2GRAY);
-    IM=cv2.GaussianBlur(IM,(3,3),5)
-    IM=cv2.medianBlur(IM,3)
-    IM=cv2.Canny(IM,15,90,L2gradient=True)
+    #IM=cv2.GaussianBlur(IM,(3,3),5)
+    #IM=cv2.medianBlur(IM,3)
+    IM=cv2.Canny(IM,15,60,L2gradient=True)
     
         
 
-    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1,minDist=52,
-                            param1=120,param2=120)
+    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.0,minDist=55,
+                            param1=40,param2=150,minRadius=0,maxRadius=0)
     
     if circles is not None:
         
@@ -45,9 +45,9 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
                 if(boolean):
                     # draw the outer circle
                     #if desired so
-                    cv2.circle(IM2,(i[0],i[1]),i[2],(255,255,0),2);
+                    cv2.circle(Image,(i[0],i[1]),i[2],(255,255,0),2);
                     # draw the center of the circle
-                    cv2.circle(IM2,(i[0],i[1]),2,(0,0,255),3);
+                    cv2.circle(Image,(i[0],i[1]),2,(0,0,255),3);
                 xmax=i[0]+i[2];
                 ymax=i[1]+i[2];
                 
@@ -71,7 +71,7 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
             
                 if(boolean):
                 
-                    cv2.imshow('detected circles',IM2);
+                    cv2.imshow('detected circles',Image);
                     cv2.imshow('processed image',IM);
                     end_time=time.time();
                     print(str(float(end_time-start_time))+" seconds to run ")
@@ -86,7 +86,7 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
                 else:
                     
                     
-                    return IM2[ymin:ymax,xmin:xmax,:];
+                    return Image[ymin:ymax,xmin:xmax,:];
         
     else:
         
@@ -96,7 +96,7 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
         
         else:
             
-            return IM2;
+            return Image;
     
 def main_test(number=0):
     
