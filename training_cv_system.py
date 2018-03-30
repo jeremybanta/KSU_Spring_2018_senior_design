@@ -17,10 +17,11 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.optimizers import Adam
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
-import cv2
 import pickle
 from sklearn.preprocessing import StandardScaler
 import gc
+from keras.models import save
+
 
 
 
@@ -91,5 +92,5 @@ while hist.history['mean_absolute_error'][0] > 0.01: # Go again if MAE too high
     hist = model.fit(im,labels_list,epochs=5);               # Train another epoch
     gc.collect();
     
-
+model.save('model.h5');
         
