@@ -1,0 +1,3 @@
+#contains images used for training of the computer vision system
+#images are of the blue festo disk before image processing or or object detection
+#images will be rotated artifically to create artifical data for training purposes of the computer vision system
