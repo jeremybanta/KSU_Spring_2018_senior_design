@@ -1,0 +1,4 @@
+#Disk1 is a one image used for training and then artifically rotated each one degree interval to create artifical data for use in training 
+#the convolutional neural network using keras. 
+#Image processing on the image is performed before getting this image and rotating it to ensure that the ROI of the image is extracted where
+#the blue disk of interest is most likely to lie in the Image. 
