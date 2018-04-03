@@ -14,59 +14,26 @@ from keras.optimizers import Adam
 from keras.layers.convolutional import Conv2D
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
-from keras.optimizers import Adam
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 import pickle
 from sklearn.preprocessing import StandardScaler
 import gc
-from keras.models import save
+from processing_libs import get_data,normalize
 
 
-
-
-
-def get_data(path):
-    
-    filename=open(path,"rb");
-    
-    return pickle.load(filename)
-    
-
-def normalize(im):
-    
-    return 2*np.array([(im-np.min(im))/(np.max(im)-np.min(im))])-1
-
-def getAngle(pred):
-    
-    angle=np.arctan2(pred[:,0],pred[:,1])
-    angle=np.radians(angle);
-    angle=np.pi+angle;
-    
-    return angle
-
-def getError(pred, degree):
-    angle = np.arctan2(pred[:,0],pred[:,1])*180/np.pi # Convert to angle
-    angle[angle<0] = angle[angle<0] + 360             # Put in range 0 to 360°
-    error = angle - degree                            # Calculate error
-    error[error> 180] = error[error> 180] - 360       # Check for 1 compared to  361
-    error[error<-180] = error[error<-180] + 360       # Check for 1 compared to -361
-    
-    return error
 
 def base_model():
 
     model = Sequential();
-    model.add(Conv2D(64, kernel_size=(5, 5),
+    model.add(Conv2D(16, kernel_size=(5, 5),
                  activation='relu',
                  input_shape=(256,256,3)));
-    model.add(Conv2D(64, kernel_size=(5, 5), activation='relu',input_shape=(256,256,3)));
+    model.add(Conv2D(16, kernel_size=(5, 5), activation='relu',input_shape=(256,256,3)));
     model.add(MaxPooling2D(pool_size=(2, 2)));
-    model.add(Conv2D(64,kernel_size=(5,5),activation='relu',input_shape=(256,256,3)));
-    model.add(MaxPooling2D(pool_size=(2,2)));
-    model.add(Conv2D(64,kernel_size=(5,5),activation='relu',input_shape=(256,256,3)))
+    model.add(Conv2D(16,kernel_size=(5,5),activation='relu',input_shape=(256,256,3)))
     model.add(Flatten());
-    model.add(Dense(32,activation='relu'));
+    model.add(Dense(16,activation='relu'));
     #model.add(Dropout(0.1))
     model.add(Dense(2,activation='linear'))                  # 2 output nodes
     model.compile(keras.optimizers.SGD(lr=0.02,momentum=0,decay=0), 'mean_squared_error', ['mae'])  # Loss MSE and metric MAE  
