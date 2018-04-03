@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Feb 23 11:48:47 2018
-
+3
 @author: Jeremy
 """
 
@@ -40,7 +40,7 @@ while(True):
     
     if(keyboard.is_pressed('s')):
         
-        pathname="C:\\Users\\Jeremy\\disk"+str(number_img);
+        pathname="C:\\Users\\Jeremy\\disk"+str(number_img+2);
         try:
             if os.path.exists(os.path.dirname(pathname)):
             
@@ -49,8 +49,7 @@ while(True):
         except:
             
             pass;
-            
-            
+
         os.makedirs(pathname);
         cv2.imwrite(pathname+str("\\")+"_0"+".png",dst);
         print(number_img);
