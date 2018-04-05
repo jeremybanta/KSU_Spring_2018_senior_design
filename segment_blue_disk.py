@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Mar 20 20:37:10 2018
-
 @author: Jeremy
 """
 
@@ -11,28 +10,32 @@ import numpy as np
 import cv2
 import time
 import os
+from scipy.ndimage.morphology import binary_fill_holes
 
-def segment_blue_disk(Image,boolean=False,return_bbox=False):
+
+def segment_blue_disk(Image,boolean=False,return_bbox=False,number=None):
+    
+    start_time=time.time();
+
+    IM=cv2.cvtColor(Image,cv2.COLOR_BGR2HSV)[:,:,0];
+    IM = cv2.medianBlur(IM,9);
+    IM=cv2.Canny(IM,15,75);
+
+    
     
     if(boolean):
         
-        
-        
-        start_time=time.time();
-        
-    IM=cv2.cvtColor(Image,cv2.COLOR_BGR2GRAY);
-    #IM=cv2.GaussianBlur(IM,(3,3),5)
-    #IM=cv2.medianBlur(IM,3)
-    IM=cv2.Canny(IM,15,60,L2gradient=True)
+        cv2.imshow('IM',IM);
+        cv2.waitKey(0);
     
-        
-
-    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.0,minDist=55,
-                            param1=40,param2=150,minRadius=0,maxRadius=0)
+    
+       
+    
+    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.5,minDist=1,param1=100);
     
     if circles is not None:
         
-        
+
         circles = np.uint16(np.around(circles));
         circles=circles[0];
     
@@ -48,6 +51,7 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
                     cv2.circle(Image,(i[0],i[1]),i[2],(255,255,0),2);
                     # draw the center of the circle
                     cv2.circle(Image,(i[0],i[1]),2,(0,0,255),3);
+                
                 xmax=i[0]+i[2];
                 ymax=i[1]+i[2];
                 
@@ -70,13 +74,15 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
                 bbox=np.array([[ymin,ymax,xmin,xmax]],dtype=np.int32);
             
                 if(boolean):
-                
-                    cv2.imshow('detected circles',Image);
-                    cv2.imshow('processed image',IM);
-                    end_time=time.time();
-                    print(str(float(end_time-start_time))+" seconds to run ")
+
+                    cv2.imshow('segmented image',IM);
+                    cv2.imshow('detected circle',Image);
+                    cv2.imshow('cropped image',Image[ymin:ymax,xmin:xmax,:]);
                     cv2.waitKey(0);
-                    cv2.destroyAllWindows();
+                    end_time=time.time();
+                    print(str(float(end_time-start_time))+" seconds to run ");
+                    
+                    return(Image[ymin:ymax,xmin:xmax,:].shape)
                     
                 if(return_bbox):
                     
@@ -90,7 +96,13 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False):
         
     else:
         
-        if(return_bbox):
+        if(boolean):
+            
+            print("circles is None");
+            
+            return(Image.shape)
+        
+        elif(return_bbox):
         
             return [0,IM.shape[0],0,IM.shape[1]];
         
@@ -103,7 +115,4 @@ def main_test(number=0):
     os.chdir("C:/Users/Jeremy/");
     pathname="C:\\Users\\Jeremy\\disk"+str(number)+"\\_0.png";
     Image=cv2.imread(pathname);
-    segment_blue_disk(Image,boolean=True)
-
-
-    
+    return segment_blue_disk(Image,boolean=True)

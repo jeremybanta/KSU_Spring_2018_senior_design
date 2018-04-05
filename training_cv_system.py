@@ -19,7 +19,7 @@ from keras.layers.pooling import MaxPooling2D
 import pickle
 from sklearn.preprocessing import StandardScaler
 import gc
-from processing_libs import get_data,normalize
+from processing_libs import get_data,normalize,resize
 
 
 
@@ -28,10 +28,10 @@ def base_model():
     model = Sequential();
     model.add(Conv2D(16, kernel_size=(5, 5),
                  activation='relu',
-                 input_shape=(256,256,3)));
-    model.add(Conv2D(16, kernel_size=(5, 5), activation='relu',input_shape=(256,256,3)));
+                 input_shape=(240,227,3)));
+    model.add(Conv2D(16, kernel_size=(5, 5), activation='relu',input_shape=(240,227,3)));
     model.add(MaxPooling2D(pool_size=(2, 2)));
-    model.add(Conv2D(16,kernel_size=(5,5),activation='relu',input_shape=(256,256,3)))
+    model.add(Conv2D(16,kernel_size=(5,5),activation='relu',input_shape=(240,227,3)))
     model.add(Flatten());
     model.add(Dense(16,activation='relu'));
     #model.add(Dropout(0.1))
@@ -55,8 +55,8 @@ gc.collect();
 hist=model.fit(im,labels_list,epochs=1);
 gc.collect();
 
-while hist.history['mean_absolute_error'][0] > 0.01: # Go again if MAE too high
-    hist = model.fit(im,labels_list,epochs=5);               # Train another epoch
+while hist.history['mean_absolute_error'][0] > 0.015: # Go again if MAE too high
+    hist = model.fit(im,labels_list,epochs=2);               # Train another epoch
     gc.collect();
     
 model.save('model.h5');

@@ -19,21 +19,21 @@ import os;
 import pickle;
 import time;
 import segment_blue_disk
+from processing_libs import resize
 
 
 
 os.chdir("C:/Users/Jeremy/")
 start=time.time();
-pathname="C:\\Users\\Jeremy\\disk";
-filename="\\_0.png";
+pathname="C:\\Users\\Jeremy\\initial_disks";
 theta_list=[];
 how_many_disks=input('enter the number of disks please!! ');
 how_many_disks=eval(how_many_disks);
 Start_Image_vector=[];
-
+file_names=["_0.png","zero_0.png"];
 for var in range(0,how_many_disks):
     
-    Start_Image_vector.append(cv2.imread(pathname+str(var)+filename));
+    Start_Image_vector.append(cv2.imread(pathname+"\\"+file_names[var]));
     
 
 training_IM_list=[];
@@ -44,7 +44,12 @@ centroid_IM=lambda IM: np.array(np.array(np.shape(IM)),dtype=np.int32);
 for var in range(0,int(how_many_disks)):
     t11=time.time();
     initial_IM=Start_Image_vector[var];
-    initial_IM=segment_blue_disk.segment_blue_disk(initial_IM);
+    print(initial_IM.shape)
+    initial_IM=segment_blue_disk.segment_blue_disk(segment_blue_disk.segment_blue_disk
+                                                   (segment_blue_disk.segment_blue_disk(initial_IM)));
+    print(initial_IM.shape)
+    initial_IM=resize(initial_IM);
+    print(initial_IM.shape);
     center=np.array(centroid_IM(initial_IM)/2,dtype=np.int32);
     center=center[0:2];
     center_0=center;
@@ -59,7 +64,6 @@ for var in range(0,int(how_many_disks)):
         M=cv2.getRotationMatrix2D(center,theta,1);
         rot=cv2.warpAffine(initial_IM,M,(initial_IM.shape[1],initial_IM.shape[0]));
         cv2.imwrite("C:\\Users\\Jeremy\\disk"+str(var)+"\\_"+str(theta)+".png",rot);
-        rot=cv2.resize(rot,(256,256));
         training_IM_list.append(rot);
         labels_list.append([np.sin(np.radians(theta)),np.cos(np.radians(theta))]);
         theta_list.append(theta);

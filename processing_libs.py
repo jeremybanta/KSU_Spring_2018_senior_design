@@ -21,6 +21,11 @@ def getAngle(pred):
     return angle
 
 
+def resize(IM):
+    
+    return cv2.resize(IM,(227,240))
+
+
 def getError(pred_angle, actual_angle):
     
     difference=actual_angle-pred_angle;
