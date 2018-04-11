@@ -22,7 +22,6 @@ import gc
 from processing_libs import get_data,normalize,resize
 
 
-
 def base_model():
 
     model = Sequential();
