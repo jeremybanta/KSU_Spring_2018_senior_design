@@ -11,7 +11,7 @@ import numpy as np
 shape_vector=[];
 
 
-def get_resize_box_size(shapes_list):
+def get_resize_box_size(shapes_list):   #get_resize_box_size
     
     
     shapes_list=np.array(shapes_list);
@@ -24,9 +24,9 @@ def get_resize_box_size(shapes_list):
     
     
 
-for var in range(0,15):
+for var in range(0,15):         
 
-    shape_vector.append(segment_blue_disk.main_test(var));
+    shape_vector.append(segment_blue_disk.main_test(var)); #get each image added to list
     
     
-resize_image_size=list(get_resize_box_size(shape_vector))
+resize_image_size=list(get_resize_box_size(shape_vector)) #resized image list

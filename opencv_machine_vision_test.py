@@ -35,10 +35,14 @@ while(True):
     
     if keyboard.is_pressed('q'):
         
+        #if q key is pressed break
         break;
     
     
     if(keyboard.is_pressed('s')):
+        
+        
+        #if s key is pressed save that image for use as a training image
         
         pathname="C:\\Users\\Jeremy\\disk"+str(number_img+2);
         try:

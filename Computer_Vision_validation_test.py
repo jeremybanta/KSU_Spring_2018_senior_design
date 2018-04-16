@@ -16,7 +16,7 @@ import time
 import gc;
 from processing_libs import getAngle,normalize,getError
 
-os.chdir("C:\\Users\\Jeremy");
+os.chdir("C:\\Users\\Jeremy\\Desktop\\Senior Project Design");
 start_time=time.time();
 plot.close("all")
 gc.collect();
