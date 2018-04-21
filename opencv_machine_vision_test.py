@@ -18,8 +18,8 @@ import numpy as np
 #This file will yield images to use for producing the training data that will be used as the training set
 
 cap = cv2.VideoCapture(1);
-width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5);
-height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5);
+#width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5);
+#height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5);
 number_img=0;
 
 

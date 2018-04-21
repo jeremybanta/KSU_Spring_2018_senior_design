@@ -12,28 +12,24 @@ Created on Wed Mar  7 02:31:26 2018
 
 
 import numpy as np;                  #import numpy
-import matplotlib.pyplot as plot;    #import matplotlib
 import cv2;                          #import opencv
 import gc                            #import garbage collector
-import os;                           #import operating system
 import pickle;                       #import pickle
 import time;                         #import time
 import segment_blue_disk             #import segment_blue_disk script
 from processing_libs import resize   #import resize from processing_libs script of functions
 
-
-
-os.chdir("C:\\Users\\Jeremy\\Desktop\\Senior Project Design")                           #change directory to Jeremy
 start=time.time();                                     #intalize variable to time program
-pathname="C:\\Users\\Jeremy\\initial_disks";           #change pathname
+pathname="C:/Users/Jeremy/Desktop/Blue_disk_training_images";           #change pathname
 theta_list=[];                                         #intalize thet_list to empty list
-how_many_disks=input('enter the number of disks please!! ');  #print to screen
-how_many_disks=eval(how_many_disks);                          #evaluate users input to int
+how_many_disks=2;
+number_value=['3','4']
 Start_Image_vector=[];                                        #intalize list of images to empty
-file_names=["_0.png","zero_0.png"];                           #file names to load
+file_names=["blue_disk_img3","blue_disk_img4"];                    #filename to load
+
 for var in range(0,how_many_disks):                           #for each disk append the image to the list
     
-    Start_Image_vector.append(cv2.imread(pathname+"\\"+file_names[var]));
+    Start_Image_vector.append(cv2.imread(pathname+"/"+file_names[var]+".png"));
     
 
 training_IM_list=[];          #list for the training Images inital value to empty list
@@ -48,8 +44,7 @@ for var in range(0,int(how_many_disks)):   #for loop for each disk
     t11=time.time();                       #time object use for timing program speed
     initial_IM=Start_Image_vector[var];    #get Image
     print(initial_IM.shape)                #print shape of image
-    initial_IM=segment_blue_disk.segment_blue_disk(segment_blue_disk.segment_blue_disk
-                                                   (segment_blue_disk.segment_blue_disk(initial_IM)));
+    initial_IM=segment_blue_disk.segment_blue_disk(initial_IM);
                                                    
     #call segment_blue_disk recursively two times
     print(initial_IM.shape)               #print image shape to the screen
@@ -74,7 +69,8 @@ for var in range(0,int(how_many_disks)):   #for loop for each disk
         M=cv2.getRotationMatrix2D(center,theta,1);                   #rotation matrix
         rot=cv2.warpAffine(initial_IM,M,(initial_IM.shape[1],initial_IM.shape[0]));
         #rot is the rotated image
-        cv2.imwrite("C:\\Users\\Jeremy\\disk"+str(var)+"\\_"+str(theta)+".png",rot);
+        cv2.imwrite("C:/Users/Jeremy/Desktop/Senior Project Design/"
+                    +"disk"+number_value[var]+"/_"+str(theta)+".png",rot);
         #write rotated image to a image file
         #saving with number of angle value in degrees apended to image for making labeled 
         #training data on
@@ -87,15 +83,17 @@ for var in range(0,int(how_many_disks)):   #for loop for each disk
         #add the theta angle value to the list of angle values
         gc.collect();
         #call the garbage collector
-
+    
+    
     t44=time.time();                                  #make new time object called t44
     print(float(t44-t33));                            #print elapsted time
 
-    
+
 labels_list=np.array(labels_list);                    #convert labels_list from list to np.array
 file_name=open("training_data.pkl","wb")               #open file for saving pickle data
 pickle.dump((theta_list,training_IM_list,labels_list),file_name) #dump pickle data
 gc.collect();                                                    #call the garbage collector
+labels_list=[];
 end=time.time();                                              #time object created called end
 
 print(end-start)                                        #display time elapsted of total program

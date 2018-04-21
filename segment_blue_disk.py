@@ -9,29 +9,18 @@ Created on Tue Mar 20 20:37:10 2018
 import numpy as np
 import cv2
 import time
-import os
+#import os
 
 
 def segment_blue_disk(Image,boolean=False,return_bbox=False,number=None):
     
     start_time=time.time();                          #time object name start_time
-
+    #IM=cv2.medianBlur(Image,15)
     IM=cv2.cvtColor(Image,cv2.COLOR_BGR2HSV)[:,:,0];   #convert RGB to HSV colorspace only get Hue
     #which corresponds to the true color of a particular image
-    IM = cv2.medianBlur(IM,9);                         #compute medianblur with (9,9) kernel size
-    IM=cv2.Canny(IM,15,75);                            
-
-    
-    
-    if(boolean):                        #optional flag for displaying image
-        
-        cv2.imshow('IM',IM);             #display image
-        cv2.waitKey(0);                  #delay 0ms
-    
-    
-       
-    
-    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.5,minDist=1,param1=100);
+    IM = cv2.medianBlur(IM,25);                         #compute medianblur with (9,9) kernel size
+    IM=cv2.Canny(IM,45,140);                          
+    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.5,minDist=7,param1=115);
     #houghcircl transform to find circles in image
     #this is used primarly to find the roi of where the bluedisk is in the image
     #and then cut out areas outside this region this will be able to make the
@@ -122,7 +111,6 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False,number=None):
     
 def main_test(number=0):    #test function
     
-    os.chdir("C:/Users/Jeremy/");
-    pathname="C:\\Users\\Jeremy\\disk"+str(number)+"\\_0.png";
+    pathname="C:/Users\Jeremy/Desktop/Blue_disk_training_images/blue_disk_img"+str(number)+".png";
     Image=cv2.imread(pathname);
     return segment_blue_disk(Image,boolean=True)   #segment blue disk with debug/test bit true

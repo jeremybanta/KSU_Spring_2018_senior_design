@@ -24,9 +24,15 @@ def get_resize_box_size(shapes_list):   #get_resize_box_size
     
     
 
-for var in range(0,15):         
+for var in range(0,13): 
 
-    shape_vector.append(segment_blue_disk.main_test(var)); #get each image added to list
+    try:
+
+        shape_vector.append(segment_blue_disk.main_test(var)); #get each image added to list
+        
+    except:
+        
+        pass;
     
     
 resize_image_size=list(get_resize_box_size(shape_vector)) #resized image list

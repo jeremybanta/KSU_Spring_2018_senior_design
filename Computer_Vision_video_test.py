@@ -5,9 +5,7 @@ Created on Fri Apr 13 10:13:39 2018
 """
 
 import cv2
-import keyboard
 import numpy as np
-import tensorflow as tf
 import segment_blue_disk
 from keras.models import load_model
 import os
@@ -24,18 +22,18 @@ model=load_model("model.h5");
 
 
 
-def get_angle_degree_val(num):   #gets the angle in degrees input argument is current test number
+def get_angle_degree_val(num,cap,plotting=True):   #gets the angle in degrees input argument is current test number
     #as an interger
     
     # Capture frame-by-frame
     
     
         
-        
-    cap=cv2.VideoCapture(1);
+    cv2.waitKey(0)
     ret, frame = cap.read();  #ret true if image is retrived from camera false otherwise
     #frame is the image retrived from the camera
     IMAGE=copy.deepcopy(frame);
+    #cv2.imwrite("C:\\Users\\Jeremy\\Desktop\\test_run_images\\t"+str(num)+".png",IMAGE)
     #get a deep copy of fram and assign it to the variable name of IMAGE
     start=time.time();
     #set time object to variable name of start
@@ -45,6 +43,13 @@ def get_angle_degree_val(num):   #gets the angle in degrees input argument is cu
     IM=normalize(IM)     #normalize the resized image
     pred=model.predict(IM);     #predict the outputs of the image sin(theta),cos(theta) values
     angle=getAngle(pred);        #predict angle value of image in degrees
+    
+    if(plotting):
+    
+        cv2.imshow('IMAGE',IMAGE);
+        
+        
+        
     cv2.imwrite("C:\\Users\\Jeremy\\Desktop\\test_run_images\\t"+str(num)+str(angle)+".png",IMAGE)
     print(angle);
     #display angle value to the screen
@@ -54,5 +59,8 @@ def get_angle_degree_val(num):   #gets the angle in degrees input argument is cu
     cap.release()
     cv2.destroyAllWindows()
     gc.collect();
+    
+    cv2.destroyAllWindows()
+    cap.release();
         
     return angle   #return angle value in degrees
