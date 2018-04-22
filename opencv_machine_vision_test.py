@@ -18,8 +18,8 @@ import numpy as np
 #This file will yield images to use for producing the training data that will be used as the training set
 
 cap = cv2.VideoCapture(1);
-#width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5);
-#height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5);
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5);
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5);
 number_img=0;
 
 
@@ -31,15 +31,15 @@ while(True):
     dst=image;
     #dst = cv2.fastNlMeansDenoisingColored(image,None,15,10,7,21)
     cv2.imshow('frame',dst);
-    cv2.waitKey(10);
+    k=cv2.waitKey(1);
     
-    if keyboard.is_pressed('q'):
+    if k==ord('q'):
         
         #if q key is pressed break
         break;
     
     
-    if(keyboard.is_pressed('s')):
+    if(k==ord('s')):
         
         
         #if s key is pressed save that image for use as a training image
