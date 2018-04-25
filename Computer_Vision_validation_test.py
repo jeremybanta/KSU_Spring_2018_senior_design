@@ -19,11 +19,11 @@ os.chdir("C:\\Users\\Jeremy\\Desktop\\Senior Project Design");
 start_time=time.time();
 plot.close("all")
 gc.collect();
-model=load_model("model.h5");
+model=load_model("model_final.h5");
 gc.collect();
 data=pickle.load(open("training_data.pkl","rb"));
 validation_Images=data[1];
-validation_Images=normalize(validation_Images)[0];
+validation_Images=normalize(validation_Images);
 ground_truth_values=data[0];
 gc.collect();
 del data;

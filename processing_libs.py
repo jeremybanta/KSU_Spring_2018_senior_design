@@ -23,7 +23,7 @@ def getAngle(pred):       #get predicted angle value in degrees
 
 def resize(IM):     #resize image to an image with shape of (227,240,x) x is 1 or 3
     
-    return cv2.resize(IM,(227,240))
+    return cv2.resize(IM,(215,215))
 
 
 def getError(pred_angle, actual_angle):   #get error of the predicted angle with the actual angle
@@ -41,8 +41,9 @@ def get_data(path):     #get path of the data to load the picle file
     return pickle.load(filename)
 
 
-def normalize(im):    #normalize image between the values -1 and 1
+def normalize(f):
     
-    return 2*np.array([(im-np.min(im))/(np.max(im)-np.min(im))])-1
+    
+    return -1+2*(f-np.min(f))/(np.max(f)-np.min(f))
 
 
