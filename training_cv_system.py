@@ -5,21 +5,19 @@ Created on Wed Mar 14 11:22:40 2018
 @author: Jeremy
 """
 
-
 import numpy as np                             #import numpy
 import os                                      #operating system
 import keras                                   #import keras                #Adam optimizer
 from keras.layers.convolutional import Conv2D        #Conv2D
 from keras.models import Sequential                 #Sequential
-from keras.layers import Dense, Dropout, Flatten,Activation     #keras.layers
+from keras.layers import Dense, Dropout, Flatten     #keras.layers
 from keras.layers.pooling import MaxPooling2D        #keras.layers.pooling
 import gc                                             #import garbage collector
 from processing_libs import get_data,normalize #processing_libs functions
 from keras import backend as K
 from importlib import reload
-from keras.utils.generic_utils import get_custom_objects
 import cv2
-
+import matplotlib.pyplot as plot
 
 def set_keras_backend(backend):       #change the backend of keras to theano or tensorflow
 
@@ -29,16 +27,11 @@ def set_keras_backend(backend):       #change the backend of keras to theano or 
         assert K.backend() == backend;
 
 set_keras_backend("tensorflow");
-        
 
-        
-        
-        
 def SVM_model():
     
     pass  #TODO
     
-
 def OpenCV_model():
     
     pass   #TODO
@@ -82,8 +75,8 @@ def base_model(): #function create convolutional neural network model
     model.add(Dense(32 ,activation='softsign'));                    #add fully connected layer
     model.add(Dense(32,activation='softsign'));                        #add fully connected layer
     model.add(Dropout(0.5))                                       #add dropout
-    model.add(Dense(64,activation='tanh'));                    #add fully connected layer
-    model.add(Dense(64,activation='tanh'));                    #add fully connected layer
+    model.add(Dense(32,activation='tanh'));                    #add fully connected layer
+    model.add(Dense(32,activation='tanh'));                    #add fully connected layer
     model.add(Dropout(0.5))                                       #add dropout
     model.add(Dense(1,activation='linear'));                      #linear outp for linear regression
     
@@ -101,9 +94,9 @@ def std_model():  #CNN with SGD and two output classes the sine and cosine of th
 
     optimizer=keras.optimizers.Adam();
     model=Sequential();
-    model.add(Conv2D(64,kernel_size=(3,3),input_shape=(215,215,3),activation='relu'));
-    model.add(Conv2D(64,kernel_size=(3,3),activation='relu'));
-    model.add(Conv2D(64,kernel_size=(3,3),activation='relu'));
+    model.add(Conv2D(32,kernel_size=(3,3),input_shape=(215,215,3),activation='relu'));
+    model.add(Conv2D(32,kernel_size=(3,3),activation='relu'));
+    model.add(Conv2D(32,kernel_size=(3,3),activation='relu'));
     model.add(MaxPooling2D(2,2));
     model.add(Conv2D(32,kernel_size=(3,3),activation='relu'));
     model.add(Conv2D(32,kernel_size=(5,5),activation='relu'));
@@ -113,9 +106,8 @@ def std_model():  #CNN with SGD and two output classes the sine and cosine of th
     model.add(Flatten());
     model.add(Dense(32,activation='elu'));
     model.add(Dense(32,activation='elu'));
-    model.add(Dropout(0.5));
-    model.add(Dense(64,activation='elu'));
-    model.add(Dense(64,activation='elu'));
+    model.add(Dense(32,activation='elu'));
+    model.add(Dense(32,activation='elu'));
     model.add(Dropout(0.5));
     model.add(Dense(2,activation='tanh'))
     model.compile(optimizer,loss='mse',metrics=['mae']);
@@ -264,7 +256,11 @@ else:
 gc.collect();
 #call garbage collector
 
-while hist.history[metrics_used][0] > 0.05: # Go again if error too high
+count=0;
+epcohs=[]
+mean_absolute_error_vector=[];
+
+while hist.history[metrics_used][0] > 0.005: # Go again if error too high
     
     if user_string=='base_model':
         
@@ -278,8 +274,10 @@ while hist.history[metrics_used][0] > 0.05: # Go again if error too high
     else:
         
         hist=model.fit(im,labels_list,epochs=1);
-        
-        
+    
+    count=count+1;
+    epcohs.append(count)
+    mean_absolute_error_vector.append(hist[metrics_used][0])
     gc.collect();
     rng_state=np.random.get_state();
     np.random.shuffle(im);
@@ -292,5 +290,5 @@ while hist.history[metrics_used][0] > 0.05: # Go again if error too high
 #while the mae is greater than 0.015 continue training the CNN if the mae becomes less than this 
 #than break out of the while loop
     
-model.save('model.h5');   #save thre trained CNN to a file called "model.h5"
+model.save('model_experemntial.h5');   #save thre trained CNN to a file called "model.h5"
         
