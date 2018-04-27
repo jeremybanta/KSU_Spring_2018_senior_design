@@ -82,7 +82,7 @@ if(training_type=='cnn'):
             frame=cv2.resize(frame,(215,215))
             cv2.imshow('frame',frame)
             cv2.waitKey()
-            frame=cv2.medianBlur(frame,5)
+            #frame=cv2.medianBlur(frame,5)
             frame=normalize(frame);
             cos_sin_vector=model.predict(np.reshape(frame,(1,215,215,3)));
             cos_sin_vector2=model2.predict(np.reshape(frame,(1,215,215,3)));

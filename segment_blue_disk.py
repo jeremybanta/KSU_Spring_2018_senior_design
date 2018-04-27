@@ -19,8 +19,8 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False,number=None):
     IM=cv2.cvtColor(Image,cv2.COLOR_BGR2HSV)[:,:,0];   #convert RGB to HSV colorspace only get Hue
     #which corresponds to the true color of a particular image
     IM = cv2.medianBlur(IM,25);                         #compute medianblur with (9,9) kernel size
-    IM=cv2.Canny(IM,45,140);                          
-    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.5,minDist=7,param1=115);
+    #IM=cv2.Canny(IM,100,200);                          
+    circles = cv2.HoughCircles(IM,cv2.HOUGH_GRADIENT,dp=1.5,minDist=3,param1=100);
     #houghcircl transform to find circles in image
     #this is used primarly to find the roi of where the bluedisk is in the image
     #and then cut out areas outside this region this will be able to make the
@@ -111,6 +111,6 @@ def segment_blue_disk(Image,boolean=False,return_bbox=False,number=None):
     
 def main_test(number=0):    #test function
     
-    pathname="C:/Users\Jeremy/Desktop/Blue_disk_training_images/blue_disk_img"+str(number)+".png";
+    pathname="C:/Users/Jeremy/Desktop/Blue_disk_training_images/blue_disk_img"+str(number)+".png";
     Image=cv2.imread(pathname);
     return segment_blue_disk(Image,boolean=True)   #segment blue disk with debug/test bit true

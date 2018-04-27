@@ -24,7 +24,7 @@ def get_resize_box_size(shapes_list):   #get_resize_box_size
     
     
 
-for var in range(0,13): 
+for var in range(0,14): 
 
     try:
 

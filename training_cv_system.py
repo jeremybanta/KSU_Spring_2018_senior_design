@@ -19,6 +19,9 @@ from importlib import reload
 import cv2
 import matplotlib.pyplot as plot
 
+
+plot.ion()
+
 def set_keras_backend(backend):       #change the backend of keras to theano or tensorflow
 
     if K.backend() != backend:
@@ -217,20 +220,7 @@ else:
 
 angle,im,labels_list=set_up_data(user_string);
     
-try:
-    
-    
-    for var in range(0,im.shape[0]):
-    
-        im[var]=histogram_equilization(im[var]);
-        
-except:
-    
-    pass;
-    
-    
-    
-    
+ 
 #create model for CNN by calling the function created called base_model
 gc.collect();
 #call the garbage collector
@@ -277,7 +267,7 @@ while hist.history[metrics_used][0] > 0.005: # Go again if error too high
     
     count=count+1;
     epcohs.append(count)
-    mean_absolute_error_vector.append(hist[metrics_used][0])
+    mean_absolute_error_vector.append(hist.history[metrics_used][0])
     gc.collect();
     rng_state=np.random.get_state();
     np.random.shuffle(im);
@@ -286,6 +276,8 @@ while hist.history[metrics_used][0] > 0.005: # Go again if error too high
     np.random.set_state(rng_state);
     np.random.set_state(rng_state);
     np.random.shuffle(labels_list);
+    plot.plot(epcohs,mean_absolute_error_vector)
+    plot.pause(0.0000005)
     
 #while the mae is greater than 0.015 continue training the CNN if the mae becomes less than this 
 #than break out of the while loop

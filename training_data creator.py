@@ -23,9 +23,9 @@ start=time.time();                                     #intalize variable to tim
 pathname="C:/Users/Jeremy/Desktop/Blue_disk_training_images";           #change pathname
 theta_list=[];                                         #intalize thet_list to empty list
 how_many_disks=2;
-number_value=['3','4']
+number_value=['0','1']
 Start_Image_vector=[];                                        #intalize list of images to empty
-file_names=["blue_disk_img3","blue_disk_img4"];                    #filename to load
+file_names=["blue_disk_img0","blue_disk_img1"];                    #filename to load
 
 for var in range(0,how_many_disks):                           #for each disk append the image to the list
     
