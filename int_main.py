@@ -19,17 +19,16 @@ import numpy as np
 from operator import itemgetter
 import pickle
 import cv2
+import gc
 import time;
 from segment_blue_disk import segment_blue_disk
 import os
+import RPi.GPIO as GPIO
+from rpi_io import define_inputs_and_outputs, get_output,digitize_output,turn_off_all_ouput_io_pins
 from template_matching import get_blue_disk_angle;
 
-cap=cv2.VideoCapture(1);
-
-
-
-
-training_type=input('enter what type you want to test performance on? ')
+cap=cv2.VideoCapture(0);
+training_type="cnn"
 
 def Main():
     
@@ -59,18 +58,19 @@ if(training_type=='matching'):
     
     Main();
     
+    
+define_inputs_and_outputs();
+    
 if(training_type=='cnn'):
     
     from keras.models import load_model
     from processing_libs import getAngle,normalize
 
-    model=load_model("model.h5");
-    model2=load_model("model_final.h5")
-    model3=load_model("model_deep_learning.h5")
+    model=load_model("model_experemntial.h5");
 
-    
     while True:
         
+        input()
         
         ret,frame=cap.read();
 
@@ -78,26 +78,43 @@ if(training_type=='cnn'):
         if(ret):
             
             start_time=time.time()
-            frame=segment_blue_disk(frame);
-            frame=cv2.resize(frame,(215,215))
+            
+            try:
+                
+                frame=segment_blue_disk(frame);
+                frame=cv2.resize(frame,(215,215))
+            
+            except:
+                
+                while True:
+                    
+                    try:
+                        
+                        print("in the loop now in try except block")
+                        
+                        frame=segment_blue_disk(frame);
+                        frame=cv2.resize(frame,(215,215))
+                        break;
+                        
+                    except:
+                        
+                        continue
+                        
             cv2.imshow('frame',frame)
-            cv2.waitKey()
+            cv2.waitKey(1)
             #frame=cv2.medianBlur(frame,5)
             frame=normalize(frame);
             cos_sin_vector=model.predict(np.reshape(frame,(1,215,215,3)));
-            cos_sin_vector2=model2.predict(np.reshape(frame,(1,215,215,3)));
-            cos_sin_vector3=model3.predict(np.reshape(frame,(1,215,215,3)));
             angle=getAngle(cos_sin_vector);
-            angle2=getAngle(cos_sin_vector2)
-            angle3=getAngle(cos_sin_vector3)
-            angle=np.mod(np.mean([angle,angle2,angle3]),120)
-            
+           
             print(angle);
-            
+            angle=np.mod(360-angle,120)
+            print(angle)
+            get_output(digitize_output(angle))
             end_time=time.time();
             print("elapsted time is: "+str(float(end_time-start_time))+" in seconds");
-            
-        
-            
+            time.sleep(10)
+            turn_off_all_ouput_io_pins()
+
     cap.release();
     cv2.destroyAllWindows();
