@@ -108,3 +108,22 @@ def get_output(number):
     elif(number==8):
 
         GPIO.output(8,GPIO.LOW);
+        
+def turn_off_all_ouput_io_pins();
+
+    GPIO.output(1,GPIO.HIGH)
+    GPIO.output(2,GPIO.HIGH)
+    GPIO.output(3,GPIO.HIGH)
+    GPIO.output(4,GPIO.HIGH)
+    GPIO.output(5,GPIO.HIGH)
+    GPIO.output(6,GPIO.HIGH)
+    GPIO.output(7,GPIO.HIGH)
+        
+ 
+def digitize_output(angle):
+    
+    if(angle/15==8):
+        
+        return 7;
+    
+    return int(angle/15)
