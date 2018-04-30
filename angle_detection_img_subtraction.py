@@ -16,7 +16,7 @@ from segment_blue_disk import segment_blue_disk
 
 
 
-def get_angle_value(current_image,image_vector):
+def get_angle_value(current_image,image_vector): #get angle value by image subtraction and getting index of lowest avg image difference
 
     
     my_vector=[];
@@ -43,7 +43,7 @@ def load_image_list():
     return pickle.load(filename)
 
 
-def process_frame(frame):
+def process_frame(frame): #crop region of image where the blue disk is in the image automatically
 
     frame=segment_blue_disk(frame)
     frame=cv2.resize(frame,(215,215))
@@ -55,11 +55,11 @@ def process_frame(frame):
 
 
 
-chdir("C:\\Users\\Jeremy\\Desktop\Senior Project Design");
+chdir("C:\\Users\\Jeremy\\Desktop\Senior Project Design");  #change directory
 
-img_list=load_image_list();
+img_list=load_image_list();   #load list of images
 
-cam = cv2.VideoCapture(1)
+cam = cv2.VideoCapture(1)  #video caputre object
 
 cv2.namedWindow("test")
 
@@ -71,19 +71,19 @@ while True:
     ret, frame = cam.read()
     
     
-    if(ret):
+    if(ret):   #if opencv reads iamge from camera
         
         
         
-        frame=process_frame(frame)
-        angle=get_angle_value(frame,img_list)
+        frame=process_frame(frame)           #segment region where blue disk is at
+        angle=get_angle_value(frame,img_list)  #get the angle value
         
         
         
         end_time=time.time()
     
-        print(np.mod(angle,360))
-        print(float(end_time-start_time))
+        print(np.mod(angle,360))          #angle value
+        print(float(end_time-start_time))  #time of program in seconds
         
         
     
